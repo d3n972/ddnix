@@ -32,7 +32,7 @@
               fira-code-symbols
             ];
           })
-        # ./modules/home/markadonyi.nix
+        ./modules/home/markadonyi.nix
         ./configuration.nix
       ];
     };
