@@ -1,8 +1,6 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   users.users.mark = {
-    hashedPassword = "$6$pM4IARjHjdHpQOcl$B/9uv4QH9J38ImeRgAyqHhI5WDHZpCCNcKyRDV2f.iqL8wMvGZ38H.zAyqiCUoBD/8YMPvnTiOvncUOZorw6z.";
+    hashedPassword = "$y$j9T$MKkiItsxAhw1V8Um0iGSz0$FYgKC8Ggsm2rgjoo7MLniHGjUbAScTvYKlZe9pZqnh8";
     description = "Sági-Kazár Márk";
     isNormalUser = true;
     shell = pkgs.zsh;

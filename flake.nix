@@ -28,38 +28,46 @@
     matrix-appservices.url = "gitlab:coffeetables/nix-matrix-appservices";
   };
 
-  outputs = { self, nixpkgs, nixpkgsUnstable, nur, home-manager, home-managerUnstable, darwin, ... }@inputs:
-    let
-      lib = nixpkgs.lib;
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgsUnstable,
+    nur,
+    home-manager,
+    home-managerUnstable,
+    darwin,
+    ...
+  } @ inputs: let
+    lib = nixpkgs.lib;
 
-      systemOverlay = (
-        final: prev: {
-          yabai = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.yabai;
-        }
-      );
+    systemOverlay = (
+      final: prev: {
+        yabai = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.yabai;
+      }
+    );
 
-      linuxHomeOverlay = (
-        final: prev: {
-          neovim = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.neovim;
-          waybar = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.waybar;
-          scaleway-cli = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.scaleway-cli;
-          gopls = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.gopls;
-          whitesur-gtk-theme = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.whitesur-gtk-theme;
-          whitesur-icon-theme = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.whitesur-icon-theme;
-          lr-tech-rofi-themes = prev.callPackage ./pkgs/lr-tech-rofi-themes/default.nix { };
-        }
-      );
-    in
+    linuxHomeOverlay = (
+      final: prev: {
+        neovim = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.neovim;
+        waybar = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.waybar;
+        scaleway-cli = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.scaleway-cli;
+        gopls = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.gopls;
+        whitesur-gtk-theme = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.whitesur-gtk-theme;
+        whitesur-icon-theme = inputs.nixpkgsUnstable.legacyPackages.${prev.system}.whitesur-icon-theme;
+        lr-tech-rofi-themes = prev.callPackage ./pkgs/lr-tech-rofi-themes/default.nix {};
+      }
+    );
+  in
     {
       nixosConfigurations = {
         mark-desktop = lib.nixosSystem {
           system = "x86_64-linux";
 
-          specialArgs = { inherit inputs; };
+          specialArgs = {inherit inputs;};
 
           modules = [
             {
-              nixpkgs.overlays = [ systemOverlay nur.overlay ];
+              nixpkgs.overlays = [systemOverlay nur.overlay];
             }
             ./modules/nixos
 
@@ -71,11 +79,11 @@
         mark-g15 = lib.nixosSystem {
           system = "x86_64-linux";
 
-          specialArgs = { inherit inputs; };
+          specialArgs = {inherit inputs;};
 
           modules = [
             {
-              nixpkgs.overlays = [ systemOverlay nur.overlay ];
+              nixpkgs.overlays = [systemOverlay nur.overlay];
             }
             ./modules/nixos
 
@@ -87,11 +95,11 @@
         mark-x1carbon9 = lib.nixosSystem {
           system = "x86_64-linux";
 
-          specialArgs = { inherit inputs; };
+          specialArgs = {inherit inputs;};
 
           modules = [
             {
-              nixpkgs.overlays = [ systemOverlay nur.overlay ];
+              nixpkgs.overlays = [systemOverlay nur.overlay];
             }
             ./modules/nixos
 
@@ -102,11 +110,11 @@
         moria = lib.nixosSystem {
           system = "x86_64-linux";
 
-          specialArgs = { inherit inputs; };
+          specialArgs = {inherit inputs;};
 
           modules = [
             {
-              nixpkgs.overlays = [ systemOverlay nur.overlay ];
+              nixpkgs.overlays = [systemOverlay nur.overlay];
             }
 
             ./hosts/moria/configuration.nix
@@ -168,7 +176,7 @@
             ./users/mark/home/programs/neomutt.nix
           ];
 
-          extraSpecialArgs = { inherit inputs; };
+          extraSpecialArgs = {inherit inputs;};
         };
 
         "mark@mark-g15" = home-manager.lib.homeManagerConfiguration rec {
@@ -185,16 +193,18 @@
 
               (
                 final: prev: {
-                  libsForQt5 = prev.libsForQt5 // {
-                    qtstyleplugin-kvantum = prev.libsForQt5.qtstyleplugin-kvantum.overrideAttrs (
-                      o: rec {
-                        patches = [ ./pkgs/kvantum/kvantum.patch ];
-                        patchFlags = [ "-p2" ];
-                        cmakeFlags = [ "-DCMAKE_INSTALL_PREFIX=$(out)" ];
-                        makeFlags = [ "PREFIX=$(out)" ];
-                      }
-                    );
-                  };
+                  libsForQt5 =
+                    prev.libsForQt5
+                    // {
+                      qtstyleplugin-kvantum = prev.libsForQt5.qtstyleplugin-kvantum.overrideAttrs (
+                        o: rec {
+                          patches = [./pkgs/kvantum/kvantum.patch];
+                          patchFlags = ["-p2"];
+                          cmakeFlags = ["-DCMAKE_INSTALL_PREFIX=$(out)"];
+                          makeFlags = ["PREFIX=$(out)"];
+                        }
+                      );
+                    };
                   # sunsama = prev.appimageTools.wrapType2 rec {
                   #   name = "Sunsama";
                   #   version = "2.0.13";
@@ -235,7 +245,7 @@
             # }
           ];
 
-          extraSpecialArgs = { inherit inputs; };
+          extraSpecialArgs = {inherit inputs;};
         };
 
         "mark@mark-x1carbon9" = home-manager.lib.homeManagerConfiguration rec {
@@ -273,7 +283,7 @@
             ./users/mark/home/programs/neomutt.nix
           ];
 
-          extraSpecialArgs = { inherit inputs; };
+          extraSpecialArgs = {inherit inputs;};
         };
 
         "mark@Mark-M2MBP" = home-managerUnstable.lib.homeManagerConfiguration rec {
@@ -285,7 +295,7 @@
               "electron-25.9.0"
             ];
 
-            overlays = [ nur.overlay ];
+            overlays = [nur.overlay];
           };
 
           modules = [
@@ -333,7 +343,7 @@
                 montserrat
                 lato
 
-                (nerdfonts.override { fonts = [ "FiraCode" "Iosevka" "JetBrainsMono" ]; })
+                (nerdfonts.override {fonts = ["FiraCode" "Iosevka" "JetBrainsMono"];})
 
                 font-awesome
                 font-awesome_5
@@ -347,15 +357,14 @@
             }
           ];
 
-          extraSpecialArgs = { inherit inputs; };
+          extraSpecialArgs = {inherit inputs;};
         };
       };
-    } // inputs.flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-      in
-      {
+    }
+    // inputs.flake-utils.lib.eachDefaultSystem (
+      system: let
+        pkgs = import nixpkgs {inherit system;};
+      in {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
             # home-manager
